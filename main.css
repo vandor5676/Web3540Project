@@ -1,0 +1,25 @@
+.container
+{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+.mainDiv
+{
+   width: 600px;
+   background-color: aliceblue;
+} 
+.title
+{
+    background-color: rgb(61, 0, 160);
+    color: white;
+}
+
+div#signInModal
+{
+    display: none;
+}
+div#signUpModal
+{
+    display: none;
+}
