@@ -24,17 +24,16 @@ div#signUpModal
     display: none;  
 }
 
-/* main page */
-.leftRightWraper
-{
+.leftRightWraper {
     display: flex;
     flex-wrap: wrap;
 }
-.left
-{
-flex: 1;
+
+.left {
+    flex: 1;
 }
-.right
-{
-flex: 4;
+
+.right {
+    flex: 4;
 }
+

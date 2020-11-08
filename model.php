@@ -50,4 +50,15 @@ function get_user_id($u)
     } else
         return -1;
 }
+
+//main page
+
+function make_post($userID, $postText)
+{
+    global $conn;
+    $sql = "insert into projectposts values (null, $userID, '$postText')";
+    $result = mysqli_query($conn, $sql);
+    return $result;
+}
+
 ?>

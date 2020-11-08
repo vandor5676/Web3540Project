@@ -1,0 +1,28 @@
+.leftRightWraper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.left {
+    flex: 1;
+}
+
+.right {
+    flex: 4;
+}
+.headder
+{
+    height: 75px;
+    background-color: rgb(132, 14, 230);
+    color: white;
+}
+.devider
+{
+    height: 2px;
+    background-color: black;
+    margin: 5px 0;
+}
+textarea
+{
+    resize: vertical;
+}

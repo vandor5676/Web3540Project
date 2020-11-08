@@ -56,8 +56,26 @@ if ($_POST['page'] == 'StartPage')
                 include('view_startpage.php');
             }
             exit();
-        //...
+       
+        
     }
 }
+else if ($_POST['page'] == 'MainPage')
+{
+    $command = $_POST['command'];
+    switch($command)
+    {
+        case 'MakeAPost':
+            $userId = get_user_id($_POST['username']);
+            make_post($userId,$_POST['postText'] );
+            echo('Posted Successfully');
+            exit();
+
+        case 'FindUsers'
+
+        exit();
+    }
+}
+
 
 ?>
