@@ -21,5 +21,20 @@ div#signInModal
 }
 div#signUpModal
 {
-    display: none;
+    display: none;  
+}
+
+/* main page */
+.leftRightWraper
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+.left
+{
+flex: 1;
+}
+.right
+{
+flex: 4;
 }
