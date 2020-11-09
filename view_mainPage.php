@@ -47,15 +47,15 @@ if (!isset($_SESSION['SignIn'])) {
                         <form>
                             <input type='hidden' name='page' value='MainPage'>
                             <input type='hidden' name='command' value='MakePost'>
-                            <textarea name="postText" class="form-control" id="makeApostText" rows="3"></textarea>
+                            <textarea name="postText" require class="form-control" id="makeApostText" rows="3"></textarea>
                             <button type="button" id="makePostButton" class="btn btn-primary">Post</button>
                         </form>
                         <div class="devider"></div>
                         <div class="MainPagePostContainer">
-                        <!-- <h3 class="rightPostName">Shane</h3>
+                            <!-- <h3 class="rightPostName">Shane</h3>
                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
                         </div>
-                        
+
                     </div>
                     <!-- end Mainpage -->
 
@@ -63,7 +63,7 @@ if (!isset($_SESSION['SignIn'])) {
                     <div class="Profile"></div>
 
                     <!-- subscriptions -->
-                    <div class="Sbscriptions"></div>
+                    <div class="Subscriptions"></div>
 
                     <!-- findUsers -->
                     <div class="FindUsers">
@@ -81,45 +81,54 @@ if (!isset($_SESSION['SignIn'])) {
         <div></div>
     </div>
     <script>
-        var controller = "controller.php";       
+        displayPosts();
+        var controller = "controller.php";
         var username = '<?php echo $_SESSION['username']  ?>';
 
         $("#makePostButton").click(function() {
             var postText = $("#makeApostText").val();
-            $.post(controller, {
-                    page: "MainPage",
-                    command: "MakeAPost",
-                    username: username,
-                    postText: postText
-                },
-                function(data) {
-                    alert(data);
-                }
-            )
+            if (postText == "") {
+                alert("Enter your post first")
+            } else {
+                $.post(controller, {
+                        page: "MainPage",
+                        command: "MakeAPost",
+                        username: username,
+                        postText: postText
+                    },
+                    function(data) {
+                        alert(data);
+                    }
+                )
+            }
+
         })
 
-        $("#HomeButton").click(function() {
-            var postText = $("#makeApostText").val();
+        $("#HomeButton").click(displayPosts);
+
+        function displayPosts() {
+            var controller = "controller.php";
+            var username = '<?php echo $_SESSION['username']  ?>';
             $.post(controller, {
                     page: "MainPage",
                     command: "ShowHome",
                     username: username
                 },
                 function(data) {
-                    alert(data);
                     var posts = JSON.parse(data);
                     var postList = "";
                     for (i = 0; i < posts.length; i++) {
-                        postList +="<h3 class='rightPostName'>"+posts[i]['username']+"</h3>"+
-                        "<textarea class='form-control' id='exampleFormControlTextarea1' rows='3'>"+posts[i]['postText']+"</textarea>"
+                        postList += "<h3 class='rightPostName'>" + posts[i]['username'] + "</h3>" +
+                            "<textarea class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
                     }
-                   // $(".MainPage").css('display', 'none');
+                    clearScreen();
                     $(".rightHeader").text("Home Page");
                     $(".rightDescription").text("Make a post");
+                    $(".MainPage").css('display', 'initial');
                     $(".MainPagePostContainer").html(postList);
                 }
             )
-        })
+        }
         $("#ProfileButton").click(function() {
             var postText = $("#makeApostText").val();
             $.post(controller, {
@@ -139,10 +148,22 @@ if (!isset($_SESSION['SignIn'])) {
                     page: "MainPage",
                     command: "ShowSubscriptions",
                     username: username,
-                    postText: postText
                 },
                 function(data) {
-                    alert(data);
+                    var subscriptions = JSON.parse(data);
+                    var subscriptionList = "";
+                    for (i = 0; i < subscriptions.length; i++) {
+
+                        subscriptionList += "<div class='alert alert-success userListItem' role='alert'>" +
+                        subscriptions[i]['username'] +
+                            "<button type='button' id='userButton' onclick='unSubscribeButtonClick(" + subscriptions[i]['subscribedToId'] + ")' class='btn btn-primary'>unSubscribe</button> </div>";
+                    }
+
+                    clearScreen();
+                    $(".rightHeader").text("Subscriptions");
+                    $(".rightDescription").text("Your subscriptions");
+                    $(".Subscriptions").css('display', 'initial');
+                    $(".Subscriptions").html(subscriptionList);
                 }
             )
         })
@@ -164,9 +185,10 @@ if (!isset($_SESSION['SignIn'])) {
                             "<button type='button' id='userButton' onclick='userButtonClick(" + users[i]['userId'] + ")' class='btn btn-primary'>Subscribe</button> </div>";
                     }
 
-                    $(".MainPage").css('display', 'none');
+                    clearScreen();
                     $(".rightHeader").text("Find Users");
                     $(".rightDescription").text("Users");
+                    $(".FindUsers").css('display', 'initial');
                     $(".FindUsers").html(userList);
                 }
             )
@@ -177,13 +199,35 @@ if (!isset($_SESSION['SignIn'])) {
                     page: "MainPage",
                     command: "subscribe",
                     username: username,
-                    subscribeId : id
+                    subscribeId: id
 
                 },
                 function(data) {
                     alert(data)
                 })
 
+        }
+        //unsubscribe button was ckicked
+        function unSubscribeButtonClick(id) {
+            $.post(controller, {
+                    page: "MainPage",
+                    command: "unSubscribe",
+                    username: username,
+                    unSubscribeId: id
+
+                },
+                function(data) {
+                    alert(data)
+                })
+
+        }
+        
+
+        function clearScreen() {
+            $(".MainPage").css('display', 'none');
+            $(".FindUsers").css('display', 'none');
+            $(".Subscriptions").css('display', 'none');
+            $(".MainPage").css('display', 'none');
         }
     </script>
 </body>

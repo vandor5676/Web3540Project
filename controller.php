@@ -63,7 +63,10 @@ if ($_POST['page'] == 'StartPage')
 else if ($_POST['page'] == 'MainPage')
 {
     $command = $_POST['command'];
+
+    if(isset($_POST['username']))
     $userId = get_user_id($_POST['username']);
+    
     switch($command)
     {
         case 'MakeAPost':
@@ -98,5 +101,18 @@ else if ($_POST['page'] == 'MainPage')
             $posts = json_encode($posts);
             echo($posts);
             exit();
+        case 'ShowSubscriptions':
+            $subscriptions = get_subscriptions($userId);
+            $subscriptions = json_encode($subscriptions);
+            echo($subscriptions);
+            exit();
+        case 'unSubscribe':
+            if(delete_subscription($subscriptionUserId))
+            {
+
+            }
+            else{
+                
+            }
     }
 }

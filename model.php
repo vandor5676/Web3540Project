@@ -105,7 +105,7 @@ function get_posts($userId)
     SELECT p.userId, postText FROM projectusers u
     inner join projectsubscriptions s on u.userId = s.userId 
     inner join projectposts p on subscribedToId = p.userId
-    where u.userId = 3 ) as t2
+    where u.userId = $userId  ) as t2
     inner join projectusers u on t2.userId = u.userId";
 
     $result = mysqli_query($conn, $sql);
@@ -115,4 +115,25 @@ function get_posts($userId)
             $data[] = $row;
         return $data;
     }
+}
+function get_subscriptions($userId)
+{
+    global $conn;
+    $sql ="select t1.subscribedToId,  u.username from
+    (select subscribedToId from projectusers u
+    inner join projectsubscriptions s on u.userId = s.userId
+    where u.userId =$userId) as t1
+    inner join projectusers u on t1.subscribedToId = u.userId";
+
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $data = [];
+        while ($row  = mysqli_fetch_assoc($result))
+            $data[] = $row;
+        return $data;
+    }
+}
+function delete_subscription($subscriptionUserId)
+{
+
 }
