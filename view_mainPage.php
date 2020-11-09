@@ -117,6 +117,7 @@ if (!isset($_SESSION['SignIn'])) {
                 function(data) {
                     var posts = JSON.parse(data);
                     var postList = "";
+                    if(posts !=null)
                     for (i = 0; i < posts.length; i++) {
                         postList += "<h3 class='rightPostName'>" + posts[i]['username'] + "</h3>" +
                             "<textarea class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
@@ -142,7 +143,11 @@ if (!isset($_SESSION['SignIn'])) {
                 }
             )
         })
-        $("#SubscriptionsButton").click(function() {
+        $("#SubscriptionsButton").click(displaySubscriptions);
+
+        function displaySubscriptions() {
+            var controller = "controller.php";
+            var username = '<?php echo $_SESSION['username']  ?>';
 
             $.post(controller, {
                     page: "MainPage",
@@ -152,10 +157,11 @@ if (!isset($_SESSION['SignIn'])) {
                 function(data) {
                     var subscriptions = JSON.parse(data);
                     var subscriptionList = "";
+                    if(subscriptions !=null)
                     for (i = 0; i < subscriptions.length; i++) {
 
                         subscriptionList += "<div class='alert alert-success userListItem' role='alert'>" +
-                        subscriptions[i]['username'] +
+                            subscriptions[i]['username'] +
                             "<button type='button' id='userButton' onclick='unSubscribeButtonClick(" + subscriptions[i]['subscribedToId'] + ")' class='btn btn-primary'>unSubscribe</button> </div>";
                     }
 
@@ -166,7 +172,8 @@ if (!isset($_SESSION['SignIn'])) {
                     $(".Subscriptions").html(subscriptionList);
                 }
             )
-        })
+        }
+
         $("#FindUsersButton").click(function() {
 
             $.post(controller, {
@@ -178,6 +185,7 @@ if (!isset($_SESSION['SignIn'])) {
                 function(data) {
                     var users = JSON.parse(data);
                     var userList = "";
+                    if(users !=null)
                     for (i = 0; i < users.length; i++) {
 
                         userList += "<div class='alert alert-success userListItem' role='alert'>" +
@@ -218,10 +226,11 @@ if (!isset($_SESSION['SignIn'])) {
                 },
                 function(data) {
                     alert(data)
+                    displaySubscriptions();
                 })
 
         }
-        
+
 
         function clearScreen() {
             $(".MainPage").css('display', 'none');

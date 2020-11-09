@@ -133,7 +133,24 @@ function get_subscriptions($userId)
         return $data;
     }
 }
-function delete_subscription($subscriptionUserId)
+function delete_subscription($userId,$subscriptionUserId)
 {
+    global $conn;
+    $sql ="select subscriptionId from projectsubscriptions
+    where userId = $userId and subscribedToId = $subscriptionUserId";
 
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+       $row= (int)$row['subscriptionId'];
+    }
+    else{
+        return false;
+    }
+    //delete from table
+    $sql = "delete from projectsubscriptions
+    where subscriptionId = $row";
+
+    $result = mysqli_query($conn, $sql);
+    return $result;
 }

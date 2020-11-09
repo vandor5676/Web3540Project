@@ -107,12 +107,13 @@ else if ($_POST['page'] == 'MainPage')
             echo($subscriptions);
             exit();
         case 'unSubscribe':
-            if(delete_subscription($subscriptionUserId))
+            $subscriptionUserId = $_POST['unSubscribeId'];
+            if(delete_subscription($userId,$subscriptionUserId))
             {
-
+                echo("Unsubscribed");
             }
             else{
-                
+                echo("Something went wrong");
             }
     }
 }
