@@ -98,24 +98,6 @@
         $("#createAccount").click(function() {
             $("#createAccountForm").submit();
         })
-        // $("#logIn").click(function() {
-        //     alert("login");
-        //     var controller = "controller.php";
-        //     var username = $("#usernameForLogin").val();
-        //     var password = $("#passwordForLogin").val();
-        //     $.post(controller, {
-
-        //             page: "MainPage",
-        //             command: "logIn",
-        //             username: username,
-        //             password: password
-        //         }
-        //         // ,
-        //         // function(data) {
-        //         //     $("#pane-result").html("<h1>" + data) + "</h1>";
-        //         // }
-        //     )
-        // })
     </script>
 </body>
 

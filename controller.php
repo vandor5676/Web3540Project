@@ -63,19 +63,34 @@ if ($_POST['page'] == 'StartPage')
 else if ($_POST['page'] == 'MainPage')
 {
     $command = $_POST['command'];
+    $userId = get_user_id($_POST['username']);
     switch($command)
     {
         case 'MakeAPost':
-            $userId = get_user_id($_POST['username']);
-            make_post($userId,$_POST['postText'] );
-            echo('Posted Successfully');
+            $postText = str_replace("'","''",$_POST['postText']);
+            if(make_post($userId,$postText ))
+            {
+                echo('Posted Successfully');
+            }
+           else
+           {
+            echo('Something went wrong');
+           }
             exit();
 
-        case 'FindUsers'
-
-        exit();
+        case 'FindUsers':
+            $users = get_users($userId);
+            $users = json_encode($users);
+            echo($users);
+            exit();
+        case 'subscribe':
+            if(check_already_subscribed($userId,$_POST['subscribeId'] ))
+            {
+                echo("You are already subscribed");
+            }
+            else{
+                add_subscription($userId, $_POST['subscribeId']);
+                echo("Subscribed!");
+            }
     }
 }
-
-
-?>

@@ -34,12 +34,14 @@ if (!isset($_SESSION['SignIn'])) {
                     <button type="button" id="FindUsersButton" class="btn btn-primary">Find Users</button>
                 </div>
                 <div class="right">
+
+                    <div class="headder">
+                        <h1 class="rightHeader">Home Page</h1>
+                    </div>
+                    <h2 class="rightDescription">Make a post</h2>
                     <!-- Main Page -->
                     <div class="MainPage">
-                        <div class="headder">
-                            <h1 class="rightHeader">Home Page</h1>
-                        </div>
-                        <h2 class="rightDescription">Make a post</h2>
+
                         <!-- post form -->
                         <form>
                             <input type='hidden' name='page' value='MainPage'>
@@ -61,7 +63,10 @@ if (!isset($_SESSION['SignIn'])) {
 
                     <!-- findUsers -->
                     <div class="FindUsers">
-
+                        <!-- <div class="alert alert-success" role="alert">
+                            A simple success alert—check it out!
+                            <button type="button" onclick="userButtonClick('test')" class="btn btn-primary">Primary</button>
+                        </div> -->
                     </div>
                     <!-- end findUsers -->
                 </div>
@@ -72,10 +77,11 @@ if (!isset($_SESSION['SignIn'])) {
         <div></div>
     </div>
     <script>
-        var controller = "controller.php";
+        var controller = "controller.php";       
+        var username = '<?php echo $_SESSION['username']  ?>';
+
         $("#makePostButton").click(function() {
             var postText = $("#makeApostText").val();
-            var username = '<?php echo $_SESSION['username']  ?>';
             $.post(controller, {
                     page: "MainPage",
                     command: "MakeAPost",
@@ -89,10 +95,10 @@ if (!isset($_SESSION['SignIn'])) {
         })
 
         $("#ProfileButton").click(function() {
-
+            var postText = $("#makeApostText").val();
             $.post(controller, {
                     page: "MainPage",
-                    command: "MakeAPost",
+                    command: "ShowProfile",
                     username: username,
                     postText: postText
                 },
@@ -105,7 +111,7 @@ if (!isset($_SESSION['SignIn'])) {
 
             $.post(controller, {
                     page: "MainPage",
-                    command: "MakeAPost",
+                    command: "ShowSubscriptions",
                     username: username,
                     postText: postText
                 },
@@ -119,15 +125,40 @@ if (!isset($_SESSION['SignIn'])) {
             $.post(controller, {
                     page: "MainPage",
                     command: "FindUsers",
-                    username: username,
-                    postText: postText
+                    username: username
+
                 },
                 function(data) {
-                    alert("in find users callback");
+                    var users = JSON.parse(data);
+                    var userList = "";
+                    for (i = 0; i < users.length; i++) {
+
+                        userList += "<div class='alert alert-success userListItem' role='alert'>" +
+                            users[i]['username'] +
+                            "<button type='button' id='userButton' onclick='userButtonClick(" + users[i]['userId'] + ")' class='btn btn-primary'>Subscribe</button> </div>";
+                    }
+
                     $(".MainPage").css('display', 'none');
+                    $(".rightHeader").text("Find Users");
+                    $(".rightDescription").text("Users");
+                    $(".FindUsers").html(userList);
                 }
             )
         })
+        //subscribe button in users was clicked
+        function userButtonClick(id) {
+            $.post(controller, {
+                    page: "MainPage",
+                    command: "subscribe",
+                    username: username,
+                    subscribeId : id
+
+                },
+                function(data) {
+                    alert(data)
+                })
+
+        }
     </script>
 </body>
 

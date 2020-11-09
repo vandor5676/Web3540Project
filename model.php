@@ -60,5 +60,38 @@ function make_post($userID, $postText)
     $result = mysqli_query($conn, $sql);
     return $result;
 }
+function get_users($userId)
+{
+    global $conn;
+    $sql = "SELECT userId, username FROM projectusers 
+    where userId != $userId";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $data = [];
+        while($row = mysqli_fetch_assoc($result))
+        $data[] = $row;
+        return $data;
+    } else
+        return -1;
 
-?>
+}
+function add_subscription($userId, $subscriberId)
+{
+
+    global $conn;
+    $sql = "insert into projectsubscriptions values (null, $userId, $subscriberId);";
+    $result = mysqli_query($conn, $sql);
+    return $result;
+}
+function check_already_subscribed($userId, $subscriberId) 
+{
+    global $conn;
+    
+    $sql = "SELECT * FROM sys.projectsubscriptions 
+    where userid = '$userId' and subscribedToId = '$subscriberId';";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0)
+        return true;
+    else
+        return false;
+}
