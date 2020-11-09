@@ -92,5 +92,11 @@ else if ($_POST['page'] == 'MainPage')
                 add_subscription($userId, $_POST['subscribeId']);
                 echo("Subscribed!");
             }
+            exit();
+        case 'ShowHome':
+            $posts= get_posts($userId);
+            $posts = json_encode($posts);
+            echo($posts);
+            exit();
     }
 }

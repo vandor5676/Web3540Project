@@ -2,10 +2,10 @@
 //$conn = mysqli_connect('localhost', 'ssteinerf20', 'password5676', 'C354_ssteinerf20');
 $conn = mysqli_connect('localhost', 'root', 'password', 'sys');
 
-function check_validity($u, $p) 
+function check_validity($u, $p)
 {
     global $conn;
-    
+
     $sql = "select * from projectusers where userName = '$u' and password = '$p'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0)
@@ -14,10 +14,10 @@ function check_validity($u, $p)
         return false;
 }
 
-function check_existence($u) 
+function check_existence($u)
 {
     global $conn;
-    
+
     $sql = "select * from projectusers where userName = '$u'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0)
@@ -26,22 +26,22 @@ function check_existence($u)
         return false;
 }
 
-function join_a_user($u, $p) 
+function join_a_user($u, $p)
 {
     global $conn;
-    
+
     $date = date("Ymd");
-    
+
     $sql = "Insert into projectusers values (NULL, '$u', '$p')";
     $result = mysqli_query($conn, $sql);
-    
+
     return $result;
 }
 
-function get_user_id($u) 
+function get_user_id($u)
 {
     global $conn;
-    
+
     $sql = "select * from projectusers where userName = '$u'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -68,12 +68,11 @@ function get_users($userId)
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         $data = [];
-        while($row = mysqli_fetch_assoc($result))
-        $data[] = $row;
+        while ($row = mysqli_fetch_assoc($result))
+            $data[] = $row;
         return $data;
     } else
         return -1;
-
 }
 function add_subscription($userId, $subscriberId)
 {
@@ -83,10 +82,10 @@ function add_subscription($userId, $subscriberId)
     $result = mysqli_query($conn, $sql);
     return $result;
 }
-function check_already_subscribed($userId, $subscriberId) 
+function check_already_subscribed($userId, $subscriberId)
 {
     global $conn;
-    
+
     $sql = "SELECT * FROM sys.projectsubscriptions 
     where userid = '$userId' and subscribedToId = '$subscriberId';";
     $result = mysqli_query($conn, $sql);
@@ -94,4 +93,26 @@ function check_already_subscribed($userId, $subscriberId)
         return true;
     else
         return false;
+}
+function get_posts($userId)
+{
+    global $conn;
+    $sql = "select t2.userId, postText, username from
+    (SELECT p.userId, postText FROM projectusers u
+    inner join projectposts p on u.userId = p.userId
+    where u.userId = $userId 
+    union all
+    SELECT p.userId, postText FROM projectusers u
+    inner join projectsubscriptions s on u.userId = s.userId 
+    inner join projectposts p on subscribedToId = p.userId
+    where u.userId = 3 ) as t2
+    inner join projectusers u on t2.userId = u.userId";
+
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $data = [];
+        while ($row  = mysqli_fetch_assoc($result))
+            $data[] = $row;
+        return $data;
+    }
 }

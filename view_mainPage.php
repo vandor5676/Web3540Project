@@ -29,6 +29,7 @@ if (!isset($_SESSION['SignIn'])) {
                     <div class="headder">
                         <h1 class="leftName"><?php echo $_SESSION['username'] ?></h1>
                     </div>
+                    <button type="button" id="HomeButton" class="btn btn-primary">Home</button>
                     <button type="button" id="ProfileButton" class="btn btn-primary">Profile</button>
                     <button type="button" id="SubscriptionsButton" class="btn btn-primary">Subscriptions</button>
                     <button type="button" id="FindUsersButton" class="btn btn-primary">Find Users</button>
@@ -50,8 +51,11 @@ if (!isset($_SESSION['SignIn'])) {
                             <button type="button" id="makePostButton" class="btn btn-primary">Post</button>
                         </form>
                         <div class="devider"></div>
-                        <h3 class="rightPostName">Shane</h3>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <div class="MainPagePostContainer">
+                        <!-- <h3 class="rightPostName">Shane</h3>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
+                        </div>
+                        
                     </div>
                     <!-- end Mainpage -->
 
@@ -94,6 +98,28 @@ if (!isset($_SESSION['SignIn'])) {
             )
         })
 
+        $("#HomeButton").click(function() {
+            var postText = $("#makeApostText").val();
+            $.post(controller, {
+                    page: "MainPage",
+                    command: "ShowHome",
+                    username: username
+                },
+                function(data) {
+                    alert(data);
+                    var posts = JSON.parse(data);
+                    var postList = "";
+                    for (i = 0; i < posts.length; i++) {
+                        postList +="<h3 class='rightPostName'>"+posts[i]['username']+"</h3>"+
+                        "<textarea class='form-control' id='exampleFormControlTextarea1' rows='3'>"+posts[i]['postText']+"</textarea>"
+                    }
+                   // $(".MainPage").css('display', 'none');
+                    $(".rightHeader").text("Home Page");
+                    $(".rightDescription").text("Make a post");
+                    $(".MainPagePostContainer").html(postList);
+                }
+            )
+        })
         $("#ProfileButton").click(function() {
             var postText = $("#makeApostText").val();
             $.post(controller, {
