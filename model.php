@@ -74,6 +74,20 @@ function get_users($userId)
     } else
         return -1;
 }
+function get_users_from_search($searchUsername , $userId)
+{
+    global $conn;
+    $sql = "SELECT userId, username FROM projectusers 
+    where userName = '$searchUsername' and userId != $userId";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $data = [];
+        while ($row = mysqli_fetch_assoc($result))
+            $data[] = $row;
+        return $data;
+    } else
+        return -1;
+}
 function add_subscription($userId, $subscriberId)
 {
 

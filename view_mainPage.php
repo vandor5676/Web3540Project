@@ -50,6 +50,7 @@ if (!isset($_SESSION['SignIn'])) {
                             <textarea name="postText" require class="form-control" id="makeApostText" rows="3"></textarea>
                             <button type="button" id="makePostButton" class="btn btn-primary">Post</button>
                         </form>
+
                         <div class="devider"></div>
                         <div class="MainPagePostContainer">
                             <!-- <h3 class="rightPostName">Shane</h3>
@@ -78,11 +79,14 @@ if (!isset($_SESSION['SignIn'])) {
                     <div class="Subscriptions"></div>
 
                     <!-- findUsers -->
-                    <div class="FindUsers">
-                        <!-- <div class="alert alert-success" role="alert">
-                            A simple success alert—check it out!
-                            <button type="button" onclick="userButtonClick('test')" class="btn btn-primary">Primary</button>
-                        </div> -->
+                    <div class="findusersContainer">
+                        <div class="alert alert-success" role="alert">
+                            Search for a user
+                            <input type="text" name="user" class="form-control" id="searchUsername" placeholder="Enter a username">
+                            <button type="button" class="btn btn-primary" id="searchUsernameButton">Search</button>
+                        </div>
+                        <div class="devider"></div>
+                        <div class="FindUsers"></div>
                     </div>
                     <!-- end findUsers -->
                 </div>
@@ -115,7 +119,7 @@ if (!isset($_SESSION['SignIn'])) {
             }
 
         })
-
+        //home page
         $("#HomeButton").click(displayPosts);
 
         function displayPosts() {
@@ -131,18 +135,23 @@ if (!isset($_SESSION['SignIn'])) {
                     var postList = "";
                     if (posts != null)
                         for (i = 0; i < posts.length; i++) {
-                            postList += "<h3 class='rightPostName'>" + posts[i]['username'] + "</h3>" +
+                            
+                            postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username']+"\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
                                 "<textarea class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
                         }
                     clearScreen();
                     $(".rightHeader").text("Home Page");
                     $(".rightDescription").text("Make a post");
                     $(".MainPage").css('display', 'initial');
-                    $(".profilePage").css('display', 'none');
                     $(".MainPagePostContainer").html(postList);
                 }
             )
         }
+        function usernameClick(username)
+        {
+            alert(username);
+        }
+
         //profile
         $("#ProfileButton").click(function() {
             clearScreen();
@@ -197,7 +206,7 @@ if (!isset($_SESSION['SignIn'])) {
                 }
             )
         }
-
+        //find users section
         $("#FindUsersButton").click(function() {
 
             $.post(controller, {
@@ -220,11 +229,43 @@ if (!isset($_SESSION['SignIn'])) {
                     clearScreen();
                     $(".rightHeader").text("Find Users");
                     $(".rightDescription").text("Users");
-                    $(".FindUsers").css('display', 'initial');
+                    $(".findusersContainer").css('display', 'initial');
                     $(".FindUsers").html(userList);
                 }
             )
         })
+
+        $("#searchUsernameButton").click(function()
+        {
+            var searchUsername = $("#searchUsername").val();
+            $.post(controller, {
+                    page: "MainPage",
+                    command: "SearchUsername",
+                    searchUsername: searchUsername
+
+                },
+                function(data) {
+                    var users = JSON.parse(data);
+                    var userList = "";
+                    if (users != null)
+                        for (i = 0; i < users.length; i++) {
+
+                            userList += "<div class='alert alert-success userListItem' role='alert'>" +
+                                users[i]['username'] +
+                                "<button type='button' id='userButton' onclick='userButtonClick(" + users[i]['userId'] + ")' class='btn btn-primary'>Subscribe</button> </div>";
+                        }
+
+                    clearScreen();
+                    $(".rightHeader").text("Find Users");
+                    $(".rightDescription").text("Users");
+                    $(".findusersContainer").css('display', 'initial');
+                    $(".FindUsers").html(userList);
+                }
+            )
+        })
+        
+        
+
         //subscribe button in users was clicked
         function userButtonClick(id) {
             $.post(controller, {
@@ -258,9 +299,9 @@ if (!isset($_SESSION['SignIn'])) {
 
         function clearScreen() {
             $(".MainPage").css('display', 'none');
-            $(".FindUsers").css('display', 'none');
+            $(".findusersContainer").css('display', 'none');
             $(".Subscriptions").css('display', 'none');
-            $(".MainPage").css('display', 'none');
+            $(".profilePage").css('display', 'none');
         }
     </script>
 </body>

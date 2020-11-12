@@ -93,6 +93,12 @@ else if ($_POST['page'] == 'MainPage')
             $users = json_encode($users);
             echo($users);
             exit();
+        case 'SearchUsername':
+            $searchUsername = $_POST['searchUsername'];
+            $users = get_users_from_search($searchUsername, $userId);
+            $users = json_encode($users);
+            echo($users);
+            exit();
         case 'subscribe':
             if(check_already_subscribed($userId,$_POST['subscribeId'] ))
             {
