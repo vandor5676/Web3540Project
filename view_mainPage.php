@@ -124,8 +124,7 @@ if (!isset($_SESSION['SignIn'])) {
             username = username;
             $.post(controller, {
                     page: "MainPage",
-                    command: "ShowHome",
-                    username: username
+                    command: "ShowHome"
                 },
                 function(data) {
                     var posts = JSON.parse(data);

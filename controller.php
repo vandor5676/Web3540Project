@@ -20,7 +20,11 @@ if ($_POST['page'] == 'StartPage')
     switch($command) {  // When a command is sent from the client
         case 'SignIn':  // With username and password
             // if (there is an error in username and password) {
-            if (!check_validity($_POST['username'], $_POST['password'])) {
+            if( $_SESSION['SignIn'] = 'Yes')
+            {
+                include('view_mainpage.php');
+            }
+           else if (!check_validity($_POST['username'], $_POST['password'])) {
                 $error_msg_username = '* Wrong username, or';
                 $error_msg_password = '* Wrong password'; 
 
@@ -118,19 +122,18 @@ else if ($_POST['page'] == 'MainPage')
             else{
                 echo("Something went wrong");
             }
+            exit();
         case 'ChangeUsername':
             $newUsername = $_POST['newUsername'];           
             if(change_username($newUsername,$userId))
             {
-                session_unset();
-                session_destroy();
-                session_start();
-                $_SESSION['SignIn'] = 'Yes';
+
                 $_SESSION['username'] = $newUsername;
                 echo("Name changed");                
             }
             else{
                 echo("That name is already taken");
             }
+            exit();
     }
 }
