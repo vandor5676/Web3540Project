@@ -89,6 +89,9 @@ if (!isset($_SESSION['SignIn'])) {
                         <div class="FindUsers"></div>
                     </div>
                     <!-- end findUsers -->
+
+                    <!-- otherUserHomePage -->
+                    <div class="otherUserHomePageInject"></div>
                 </div>
             </div>
 
@@ -124,7 +127,6 @@ if (!isset($_SESSION['SignIn'])) {
 
         function displayPosts() {
             var controller = "controller.php";
-            var newusername = '<?php echo $_SESSION['username']  ?>';
             username = username;
             $.post(controller, {
                     page: "MainPage",
@@ -137,7 +139,7 @@ if (!isset($_SESSION['SignIn'])) {
                         for (i = 0; i < posts.length; i++) {
                             
                             postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username']+"\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
-                                "<textarea class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
+                                "<textarea readonly class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
                         }
                     clearScreen();
                     $(".rightHeader").text("Home Page");
@@ -149,7 +151,27 @@ if (!isset($_SESSION['SignIn'])) {
         }
         function usernameClick(username)
         {
-            alert(username);
+            $.post(controller, {
+                    page: "MainPage",
+                    command: "ShowOtherUserHome",
+                    otherUserName:username
+                },
+                function(data) {
+                    var posts = JSON.parse(data);
+                    var postList = "";
+                    if (posts != null)
+                        for (i = 0; i < posts.length; i++) {
+                            
+                            postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username']+"\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
+                                "<textarea readonly class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
+                        }
+                    clearScreen();
+                    $(".rightHeader").text("Home Page");
+                    $(".rightDescription").text(username + "'s homepage");  
+                    $(".otherUserHomePageInject").css('display', 'initial');                   
+                    $(".otherUserHomePageInject").html(postList);
+                }
+            )
         }
 
         //profile
@@ -302,6 +324,7 @@ if (!isset($_SESSION['SignIn'])) {
             $(".findusersContainer").css('display', 'none');
             $(".Subscriptions").css('display', 'none');
             $(".profilePage").css('display', 'none');
+            $(".otherUserHomePageInject").css('display', 'none');
         }
     </script>
 </body>

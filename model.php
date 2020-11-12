@@ -130,6 +130,10 @@ function get_posts($userId)
         return $data;
     }
 }
+function ShowOtherUserHome($otherUserId)
+{
+
+}
 function get_subscriptions($userId)
 {
     global $conn;

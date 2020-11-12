@@ -114,6 +114,12 @@ else if ($_POST['page'] == 'MainPage')
             $posts = json_encode($posts);
             echo($posts);
             exit();
+        case 'ShowOtherUserHome':
+            $otherUserId = get_user_id($_POST['otherUserName']);
+            $posts = get_posts($otherUserId);
+            $posts = json_encode($posts);
+            echo($posts);
+            exit();
         case 'ShowSubscriptions':
             $subscriptions = get_subscriptions($userId);
             $subscriptions = json_encode($subscriptions);
