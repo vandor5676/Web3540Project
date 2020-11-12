@@ -111,12 +111,12 @@ function check_already_subscribed($userId, $subscriberId)
 function get_posts($userId)
 {
     global $conn;
-    $sql = "select t2.userId, postText, username from
-    (SELECT p.userId, postText FROM projectusers u
+    $sql = "select t2.userId, postText, t2.postId, username from
+    (SELECT p.userId, postText,postId FROM projectusers u
     inner join projectposts p on u.userId = p.userId
-    where u.userId = $userId 
+    where u.userId = $userId
     union all
-    SELECT p.userId, postText FROM projectusers u
+    SELECT p.userId, postText, postId FROM projectusers u
     inner join projectsubscriptions s on u.userId = s.userId 
     inner join projectposts p on subscribedToId = p.userId
     where u.userId = $userId  ) as t2
@@ -129,6 +129,14 @@ function get_posts($userId)
             $data[] = $row;
         return $data;
     }
+}
+function delete_post($postid)
+{
+    global $conn;
+    $sql = "delete from projectposts
+    where postId = $postid";
+    $result = mysqli_query($conn, $sql);
+    return $result;
 }
 function ShowOtherUserHome($otherUserId)
 {

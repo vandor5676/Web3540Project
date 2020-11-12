@@ -87,7 +87,21 @@ else if ($_POST['page'] == 'MainPage')
             echo('Something went wrong');
            }
             exit();
+        case 'DeletePost':
+            $postUsername=$_POST['postUsername'];
+            $postid=$_POST['postid'];        
 
+            if($postUsername != $_SESSION['username'])
+                echo("You canot delete another users posts");
+            else
+            if(delete_post($postid))
+                echo("deleted");
+            else
+            echo("Could not delete post");
+            
+
+
+            exit();
         case 'FindUsers':
             $users = get_users($userId);
             $users = json_encode($users);

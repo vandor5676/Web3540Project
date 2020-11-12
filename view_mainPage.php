@@ -117,6 +117,7 @@ if (!isset($_SESSION['SignIn'])) {
                     },
                     function(data) {
                         alert(data);
+                        displayPosts();
                     }
                 )
             }
@@ -139,13 +140,28 @@ if (!isset($_SESSION['SignIn'])) {
                         for (i = 0; i < posts.length; i++) {
                             
                             postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username']+"\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
-                                "<textarea readonly class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
+                                "<textarea readonly class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>" +
+                                "<button type='button' onclick = 'deletePost(\""+posts[i]['username']+"\",\""+posts[i]['postId']+"\")' class='btn btn-danger'>Delete</button>"
                         }
                     clearScreen();
                     $(".rightHeader").text("Home Page");
                     $(".rightDescription").text("Make a post");
                     $(".MainPage").css('display', 'initial');
                     $(".MainPagePostContainer").html(postList);
+                }
+            )
+        }
+        function deletePost(username, postid)
+        {
+            $.post(controller, {
+                    page: "MainPage",
+                    command: "DeletePost",
+                    postUsername: username,
+                    postid: postid
+                },
+                function(data) {
+                    alert(data);
+                    displayPosts();
                 }
             )
         }
