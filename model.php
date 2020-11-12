@@ -196,3 +196,18 @@ function change_username($newUsername,$userId)
     $result = mysqli_query($conn, $sql);
     return $result;
 }
+function delete_account($userId)
+{
+    global $conn;
+    $sql ="delete FROM projectposts
+    where userId = $userId;";
+    $result = mysqli_query($conn, $sql);
+
+    $sql ="delete FROM projectsubscriptions
+    where userId = $userId;";
+    $result = mysqli_query($conn, $sql);
+
+    $sql ="delete FROM projectusers
+    where userId = $userId;";
+    $result = mysqli_query($conn, $sql);
+}

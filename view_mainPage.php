@@ -60,6 +60,11 @@ if (!isset($_SESSION['SignIn'])) {
                         </div>
 
                     </div>
+
+                    <!-- end Mainpage -->
+
+                    <!-- profile -->
+                    <div class="Profile"></div>
                     <div class="profilePage">
                         <form>
                             <div class="form-group">
@@ -68,12 +73,17 @@ if (!isset($_SESSION['SignIn'])) {
                                 <small id="emailHelp" class="form-text text-muted">The new Username can't already exist</small>
                             </div>
                             <button id="changeNameButton" type="button" class="btn btn-primary">Chane</button>
-                        </form>
-                    </div>
-                    <!-- end Mainpage -->
 
-                    <!-- profile -->
-                    <div class="Profile"></div>
+                        </form>
+                        <div class="devider"></div>
+                        <form id="signOutForm" method='post' action='controller.php'>
+                            <input type='hidden' name='page' value='MainPage'>
+                            <input type='hidden' name='command' value='SignOut'>
+                        </form>
+                        <button id="signOutButton" type="button" class="btn btn-primary">Sign Out</button>
+                        <div class="devider"></div>
+                        <button id="deleteAccountButton" type="button" class="btn btn-primary">delete account</button>
+                    </div>
 
                     <!-- subscriptions -->
                     <div class="Subscriptions"></div>
@@ -138,10 +148,10 @@ if (!isset($_SESSION['SignIn'])) {
                     var postList = "";
                     if (posts != null)
                         for (i = 0; i < posts.length; i++) {
-                            
-                            postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username']+"\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
+
+                            postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username'] + "\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
                                 "<textarea readonly class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>" +
-                                "<button type='button' onclick = 'deletePost(\""+posts[i]['username']+"\",\""+posts[i]['postId']+"\")' class='btn btn-danger'>Delete</button>"
+                                "<button type='button' onclick = 'deletePost(\"" + posts[i]['username'] + "\",\"" + posts[i]['postId'] + "\")' class='btn btn-danger'>Delete</button>"
                         }
                     clearScreen();
                     $(".rightHeader").text("Home Page");
@@ -151,8 +161,8 @@ if (!isset($_SESSION['SignIn'])) {
                 }
             )
         }
-        function deletePost(username, postid)
-        {
+
+        function deletePost(username, postid) {
             $.post(controller, {
                     page: "MainPage",
                     command: "DeletePost",
@@ -165,26 +175,26 @@ if (!isset($_SESSION['SignIn'])) {
                 }
             )
         }
-        function usernameClick(username)
-        {
+
+        function usernameClick(username) {
             $.post(controller, {
                     page: "MainPage",
                     command: "ShowOtherUserHome",
-                    otherUserName:username
+                    otherUserName: username
                 },
                 function(data) {
                     var posts = JSON.parse(data);
                     var postList = "";
                     if (posts != null)
                         for (i = 0; i < posts.length; i++) {
-                            
-                            postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username']+"\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
+
+                            postList += "<h3 class='rightPostName' onclick='usernameClick(\"" + posts[i]['username'] + "\")\' style='cursor: pointer'>" + posts[i]['username'] + "</h3>" +
                                 "<textarea readonly class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
                         }
                     clearScreen();
                     $(".rightHeader").text("Home Page");
-                    $(".rightDescription").text(username + "'s homepage");  
-                    $(".otherUserHomePageInject").css('display', 'initial');                   
+                    $(".rightDescription").text(username + "'s homepage");
+                    $(".otherUserHomePageInject").css('display', 'initial');
                     $(".otherUserHomePageInject").html(postList);
                 }
             )
@@ -214,6 +224,28 @@ if (!isset($_SESSION['SignIn'])) {
                 }
             )
         })
+        $("#signOutButton").click(function() {
+           $("#signOutForm").submit();
+        })
+        $("#deleteAccountButton").click(function() {
+            var result = confirm("Are you sure you want to delete your account?");
+            if (result == true)
+                $.post(controller, {
+                        page: "MainPage",
+                        command: "DeleteAccount"
+                    },
+                    function(data) {
+                        alert(data);
+                        $("#signOutForm").submit();
+                    }
+                )
+
+
+        })
+
+
+
+        //end profile
         $("#SubscriptionsButton").click(displaySubscriptions);
 
         function displaySubscriptions() {
@@ -273,8 +305,7 @@ if (!isset($_SESSION['SignIn'])) {
             )
         })
 
-        $("#searchUsernameButton").click(function()
-        {
+        $("#searchUsernameButton").click(function() {
             var searchUsername = $("#searchUsername").val();
             $.post(controller, {
                     page: "MainPage",
@@ -301,8 +332,8 @@ if (!isset($_SESSION['SignIn'])) {
                 }
             )
         })
-        
-        
+
+
 
         //subscribe button in users was clicked
         function userButtonClick(id) {

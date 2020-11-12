@@ -20,7 +20,7 @@ if ($_POST['page'] == 'StartPage')
     switch($command) {  // When a command is sent from the client
         case 'SignIn':  // With username and password
             // if (there is an error in username and password) {
-            if( $_SESSION['SignIn'] = 'Yes')
+            if(isset($_SESSION['SignIn'])&& $_SESSION['SignIn'] == 'Yes')
             {
                 include('view_mainpage.php');
             }
@@ -161,5 +161,17 @@ else if ($_POST['page'] == 'MainPage')
                 echo("That name is already taken");
             }
             exit();
+        case 'SignOut':
+            $_SESSION;
+            session_unset();
+            session_destroy(); 
+            include('view_startpage.php');
+            // header("location: view_startpage.php",  true,  301 );  exit;
+            exit();
+        case 'DeleteAccount':
+            delete_account($userId);
+            echo("Account deleted");
+            exit();
+    
     }
 }
