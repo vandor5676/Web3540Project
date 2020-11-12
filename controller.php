@@ -12,6 +12,7 @@ if (empty($_POST['page'])) {  // When no page is sent from the client; The initi
     exit();
 }
 require('model.php');
+session_start();
 
 if ($_POST['page'] == 'StartPage')
 {
@@ -64,8 +65,10 @@ else if ($_POST['page'] == 'MainPage')
 {
     $command = $_POST['command'];
 
-    if(isset($_POST['username']))
-    $userId = get_user_id($_POST['username']);
+    // if(isset($_POST['username']))
+    // $userId = get_user_id($_POST['username']);
+    if(isset($_SESSION['username']))
+    $userId = get_user_id($_SESSION['username']);
     
     switch($command)
     {
@@ -114,6 +117,20 @@ else if ($_POST['page'] == 'MainPage')
             }
             else{
                 echo("Something went wrong");
+            }
+        case 'ChangeUsername':
+            $newUsername = $_POST['newUsername'];           
+            if(change_username($newUsername,$userId))
+            {
+                session_unset();
+                session_destroy();
+                session_start();
+                $_SESSION['SignIn'] = 'Yes';
+                $_SESSION['username'] = $newUsername;
+                echo("Name changed");                
+            }
+            else{
+                echo("That name is already taken");
             }
     }
 }

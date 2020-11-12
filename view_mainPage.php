@@ -54,8 +54,20 @@ if (!isset($_SESSION['SignIn'])) {
                         <div class="MainPagePostContainer">
                             <!-- <h3 class="rightPostName">Shane</h3>
                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
+
+
                         </div>
 
+                    </div>
+                    <div class="profilePage">
+                        <form>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="newUsername" class="form-control" id="newUsername" placeholder="Enter new username">
+                                <small id="emailHelp" class="form-text text-muted">The new Username can't already exist</small>
+                            </div>
+                            <button id="changeNameButton" type="button" class="btn btn-primary">Chane</button>
+                        </form>
                     </div>
                     <!-- end Mainpage -->
 
@@ -80,10 +92,10 @@ if (!isset($_SESSION['SignIn'])) {
 
         <div></div>
     </div>
-    <script>
-        displayPosts();
+    <script>      
         var controller = "controller.php";
         var username = '<?php echo $_SESSION['username']  ?>';
+        displayPosts();
 
         $("#makePostButton").click(function() {
             var postText = $("#makeApostText").val();
@@ -108,7 +120,8 @@ if (!isset($_SESSION['SignIn'])) {
 
         function displayPosts() {
             var controller = "controller.php";
-            var username = '<?php echo $_SESSION['username']  ?>';
+            var newusername = '<?php echo $_SESSION['username']  ?>';
+            username = username;
             $.post(controller, {
                     page: "MainPage",
                     command: "ShowHome",
@@ -117,29 +130,43 @@ if (!isset($_SESSION['SignIn'])) {
                 function(data) {
                     var posts = JSON.parse(data);
                     var postList = "";
-                    if(posts !=null)
-                    for (i = 0; i < posts.length; i++) {
-                        postList += "<h3 class='rightPostName'>" + posts[i]['username'] + "</h3>" +
-                            "<textarea class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
-                    }
+                    if (posts != null)
+                        for (i = 0; i < posts.length; i++) {
+                            postList += "<h3 class='rightPostName'>" + posts[i]['username'] + "</h3>" +
+                                "<textarea class='form-control post' id='exampleFormControlTextarea1' rows='3'>" + posts[i]['postText'] + "</textarea>"
+                        }
                     clearScreen();
                     $(".rightHeader").text("Home Page");
                     $(".rightDescription").text("Make a post");
                     $(".MainPage").css('display', 'initial');
+                    $(".profilePage").css('display', 'none');
                     $(".MainPagePostContainer").html(postList);
                 }
             )
         }
+        //profile
         $("#ProfileButton").click(function() {
-            var postText = $("#makeApostText").val();
+            clearScreen();
+            $(".rightHeader").text("Profile");
+            $(".rightDescription").text("change your username");
+            $(".MainPage").css('display', 'none');
+            $(".profilePage").css('display', 'initial');
+        })
+        $("#changeNameButton").click(function() {
+            var newUsername = $("#newUsername").val();
+            var username = '<?php echo $_SESSION['username']  ?>';
             $.post(controller, {
                     page: "MainPage",
-                    command: "ShowProfile",
-                    username: username,
-                    postText: postText
+                    command: "ChangeUsername",
+                    newUsername: newUsername,
+                    username: username
                 },
                 function(data) {
                     alert(data);
+                    var profileContent = "";
+
+                    //$(".MainPagePostContainer").html(profileContent);
+                    //update session and name
                 }
             )
         })
@@ -157,13 +184,13 @@ if (!isset($_SESSION['SignIn'])) {
                 function(data) {
                     var subscriptions = JSON.parse(data);
                     var subscriptionList = "";
-                    if(subscriptions !=null)
-                    for (i = 0; i < subscriptions.length; i++) {
+                    if (subscriptions != null)
+                        for (i = 0; i < subscriptions.length; i++) {
 
-                        subscriptionList += "<div class='alert alert-success userListItem' role='alert'>" +
-                            subscriptions[i]['username'] +
-                            "<button type='button' id='userButton' onclick='unSubscribeButtonClick(" + subscriptions[i]['subscribedToId'] + ")' class='btn btn-primary'>unSubscribe</button> </div>";
-                    }
+                            subscriptionList += "<div class='alert alert-success userListItem' role='alert'>" +
+                                subscriptions[i]['username'] +
+                                "<button type='button' id='userButton' onclick='unSubscribeButtonClick(" + subscriptions[i]['subscribedToId'] + ")' class='btn btn-primary'>unSubscribe</button> </div>";
+                        }
 
                     clearScreen();
                     $(".rightHeader").text("Subscriptions");
@@ -185,13 +212,13 @@ if (!isset($_SESSION['SignIn'])) {
                 function(data) {
                     var users = JSON.parse(data);
                     var userList = "";
-                    if(users !=null)
-                    for (i = 0; i < users.length; i++) {
+                    if (users != null)
+                        for (i = 0; i < users.length; i++) {
 
-                        userList += "<div class='alert alert-success userListItem' role='alert'>" +
-                            users[i]['username'] +
-                            "<button type='button' id='userButton' onclick='userButtonClick(" + users[i]['userId'] + ")' class='btn btn-primary'>Subscribe</button> </div>";
-                    }
+                            userList += "<div class='alert alert-success userListItem' role='alert'>" +
+                                users[i]['username'] +
+                                "<button type='button' id='userButton' onclick='userButtonClick(" + users[i]['userId'] + ")' class='btn btn-primary'>Subscribe</button> </div>";
+                        }
 
                     clearScreen();
                     $(".rightHeader").text("Find Users");

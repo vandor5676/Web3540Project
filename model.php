@@ -154,3 +154,19 @@ function delete_subscription($userId,$subscriptionUserId)
     $result = mysqli_query($conn, $sql);
     return $result;
 }
+function change_username($newUsername,$userId)
+{
+    if(check_existence($newUsername))
+    {
+        return false;
+    }
+
+    global $conn;
+    $sql ="update projectusers
+    set username = '$newUsername'
+    where
+    userId = $userId";
+
+    $result = mysqli_query($conn, $sql);
+    return $result;
+}
