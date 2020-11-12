@@ -92,7 +92,7 @@ if (!isset($_SESSION['SignIn'])) {
 
         <div></div>
     </div>
-    <script>      
+    <script>
         var controller = "controller.php";
         var username = '<?php echo $_SESSION['username']  ?>';
         displayPosts();
@@ -162,10 +162,8 @@ if (!isset($_SESSION['SignIn'])) {
                 },
                 function(data) {
                     alert(data);
-                    var profileContent = "";
-
-                    //$(".MainPagePostContainer").html(profileContent);
-                    //update session and name
+                    if (data == "Name changed")
+                        $(".leftName").text(newUsername);
                 }
             )
         })
