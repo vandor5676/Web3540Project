@@ -6,7 +6,7 @@ function check_validity($u, $p)
 {
     global $conn;
 
-    $sql = "select * from projectusers where userName = '$u' and password = '$p'";
+    $sql = "select * from projectUsers where username = '$u' and password = '$p'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0)
         return true;
@@ -18,7 +18,7 @@ function check_existence($u)
 {
     global $conn;
 
-    $sql = "select * from projectusers where userName = '$u'";
+    $sql = "select * from projectUsers where username = '$u'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0)
         return true;
@@ -32,7 +32,7 @@ function join_a_user($u, $p)
 
     $date = date("Ymd");
 
-    $sql = "Insert into projectusers values (NULL, '$u', '$p')";
+    $sql = "Insert into projectUsers values (NULL, '$u', '$p')";
     $result = mysqli_query($conn, $sql);
 
     return $result;
@@ -42,7 +42,7 @@ function get_user_id($u)
 {
     global $conn;
 
-    $sql = "select * from projectusers where userName = '$u'";
+    $sql = "select * from projectUsers where username = '$u'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
@@ -53,17 +53,17 @@ function get_user_id($u)
 
 //main page
 
-function make_post($userID, $postText)
+function make_post($userId, $postText)
 {
     global $conn;
-    $sql = "insert into projectposts values (null, $userID, '$postText')";
+    $sql = "insert into projectPosts values (null, $userId, '$postText')";
     $result = mysqli_query($conn, $sql);
     return $result;
 }
 function get_users($userId)
 {
     global $conn;
-    $sql = "SELECT userId, username FROM projectusers 
+    $sql = "SELECT userId, username FROM projectUsers 
     where userId != $userId";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -74,11 +74,11 @@ function get_users($userId)
     } else
         return -1;
 }
-function get_users_from_search($searchUsername , $userId)
+function get_users_from_search($searchusername , $userId)
 {
     global $conn;
-    $sql = "SELECT userId, username FROM projectusers 
-    where userName = '$searchUsername' and userId != $userId";
+    $sql = "SELECT userId, username FROM projectUsers 
+    where username = '$searchusername' and userId != $userId";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         $data = [];
@@ -92,7 +92,7 @@ function add_subscription($userId, $subscriberId)
 {
 
     global $conn;
-    $sql = "insert into projectsubscriptions values (null, $userId, $subscriberId);";
+    $sql = "insert into projectSubscriptions values (null, $userId, $subscriberId);";
     $result = mysqli_query($conn, $sql);
     return $result;
 }
@@ -100,8 +100,8 @@ function check_already_subscribed($userId, $subscriberId)
 {
     global $conn;
 
-    $sql = "SELECT * FROM sys.projectsubscriptions 
-    where userid = '$userId' and subscribedToId = '$subscriberId';";
+    $sql = "SELECT * FROM sys.projectSubscriptions 
+    where userId = '$userId' and subscribedToId = '$subscriberId';";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0)
         return true;
@@ -112,15 +112,15 @@ function get_posts($userId)
 {
     global $conn;
     $sql = "select t2.userId, postText, t2.postId, username from
-    (SELECT p.userId, postText,postId FROM projectusers u
-    inner join projectposts p on u.userId = p.userId
+    (SELECT p.userId, postText,postId FROM projectUsers u
+    inner join projectPosts p on u.userId = p.userId
     where u.userId = $userId
     union all
-    SELECT p.userId, postText, postId FROM projectusers u
-    inner join projectsubscriptions s on u.userId = s.userId 
-    inner join projectposts p on subscribedToId = p.userId
+    SELECT p.userId, postText, postId FROM projectUsers u
+    inner join projectSubscriptions s on u.userId = s.userId 
+    inner join projectPosts p on subscribedToId = p.userId
     where u.userId = $userId  ) as t2
-    inner join projectusers u on t2.userId = u.userId";
+    inner join projectUsers u on t2.userId = u.userId";
 
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -130,15 +130,15 @@ function get_posts($userId)
         return $data;
     }
 }
-function delete_post($postid)
+function delete_post($postId)
 {
     global $conn;
-    $sql = "delete from projectposts
-    where postId = $postid";
+    $sql = "delete from projectPosts
+    where postId = $postId";
     $result = mysqli_query($conn, $sql);
     return $result;
 }
-function ShowOtherUserHome($otherUserId)
+function ShowOtherUserHome($otheruserId)
 {
 
 }
@@ -146,10 +146,10 @@ function get_subscriptions($userId)
 {
     global $conn;
     $sql ="select t1.subscribedToId,  u.username from
-    (select subscribedToId from projectusers u
-    inner join projectsubscriptions s on u.userId = s.userId
+    (select subscribedToId from projectUsers u
+    inner join projectSubscriptions s on u.userId = s.userId
     where u.userId =$userId) as t1
-    inner join projectusers u on t1.subscribedToId = u.userId";
+    inner join projectUsers u on t1.subscribedToId = u.userId";
 
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -159,11 +159,11 @@ function get_subscriptions($userId)
         return $data;
     }
 }
-function delete_subscription($userId,$subscriptionUserId)
+function delete_subscription($userId,$subscriptionuserId)
 {
     global $conn;
-    $sql ="select subscriptionId from projectsubscriptions
-    where userId = $userId and subscribedToId = $subscriptionUserId";
+    $sql ="select subscriptionId from projectSubscriptions
+    where userId = $userId and subscribedToId = $subscriptionuserId";
 
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -174,22 +174,22 @@ function delete_subscription($userId,$subscriptionUserId)
         return false;
     }
     //delete from table
-    $sql = "delete from projectsubscriptions
+    $sql = "delete from projectSubscriptions
     where subscriptionId = $row";
 
     $result = mysqli_query($conn, $sql);
     return $result;
 }
-function change_username($newUsername,$userId)
+function change_username($newusername,$userId)
 {
-    if(check_existence($newUsername))
+    if(check_existence($newusername))
     {
         return false;
     }
 
     global $conn;
-    $sql ="update projectusers
-    set username = '$newUsername'
+    $sql ="update projectUsers
+    set username = '$newusername'
     where
     userId = $userId";
 
@@ -199,15 +199,15 @@ function change_username($newUsername,$userId)
 function delete_account($userId)
 {
     global $conn;
-    $sql ="delete FROM projectposts
+    $sql ="delete FROM projectPosts
     where userId = $userId;";
     $result = mysqli_query($conn, $sql);
 
-    $sql ="delete FROM projectsubscriptions
+    $sql ="delete FROM projectSubscriptions
     where userId = $userId;";
     $result = mysqli_query($conn, $sql);
 
-    $sql ="delete FROM projectusers
+    $sql ="delete FROM projectUsers
     where userId = $userId;";
     $result = mysqli_query($conn, $sql);
 }
