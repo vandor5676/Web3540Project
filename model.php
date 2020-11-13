@@ -1,6 +1,6 @@
 <?php
-//$conn = mysqli_connect('localhost', 'ssteinerf20', 'password5676', 'C354_ssteinerf20');
-$conn = mysqli_connect('localhost', 'root', 'password', 'sys');
+$conn = mysqli_connect('localhost', 'ssteinerf20', 'password5676', 'C354_ssteinerf20');
+//$conn = mysqli_connect('localhost', 'root', 'password', 'sys');
 
 function check_validity($u, $p)
 {
@@ -100,7 +100,7 @@ function check_already_subscribed($userId, $subscriberId)
 {
     global $conn;
 
-    $sql = "SELECT * FROM sys.projectSubscriptions 
+    $sql = "SELECT * FROM projectSubscriptions 
     where userId = '$userId' and subscribedToId = '$subscriberId';";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0)

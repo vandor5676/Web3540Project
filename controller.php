@@ -1,6 +1,6 @@
 <?php 
 
-$x = $_POST['page'];
+//$x = $_POST['page'];
 
 if (empty($_POST['page'])) {  // When no page is sent from the client; The initial display
                                 // You may use if (!isset($_POST['page'])) instead of empty(...).
