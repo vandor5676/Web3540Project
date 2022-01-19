@@ -349,7 +349,7 @@ if (!isset($_SESSION['SignIn'])) {
                 })
 
         }
-        //unsubscribe button was ckicked
+        //unsubscribe button was clicked
         function unSubscribeButtonClick(id) {
             $.post(controller, {
                     page: "MainPage",

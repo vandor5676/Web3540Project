@@ -1,6 +1,6 @@
 <?php
-$conn = mysqli_connect('localhost', 'ssteinerf20', 'password5676', 'C354_ssteinerf20');
-//$conn = mysqli_connect('localhost', 'root', 'password', 'sys');
+//$conn = mysqli_connect('localhost', 'ssteinerf20', 'password5676', 'C354_ssteinerf20');
+$conn = mysqli_connect('localhost', 'root', 'password', 'sys');
 
 function check_validity($u, $p)
 {
